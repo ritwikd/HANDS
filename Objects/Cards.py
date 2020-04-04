@@ -1,21 +1,89 @@
 import random
 
-class Deck():
-    def __init__(self):
-        self.cards = ['2C', '2D', '2H', '2S', '3C', '3D', '3H', '3S', '4C', '4D', '4H', '4S', '5C', '5D', '5H', '5S', '6C', '6D', '6H', '6S', '7C', '7D', '7H', '7S', '8C', '8D', '8H', '8S', '9C', '9D', '9H', '9S', 'TC', 'TD', 'TH', 'TS', 'JC', 'JD', 'JH', 'JS', 'QC', 'QD', 'QH', 'QS', 'KC', 'KD', 'KH', 'KS', 'AC', 'AD', 'AH', 'AS']
+# Aces high!
+faces = {2: '2 ', 3: '3 ', 4: '4 ', 5: '5 ',
+         6: '6 ', 7: '7 ', 8: '8 ', 9: '9 ', 10: '10',
+         11: 'J ', 12: 'Q ', 13: 'K ', 14: 'A '}
 
-    def shuffle(self):
-        random.shuffle(self.cards)
+face_string = {2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',
+               6: 'Six', 7: "Seven", 8: 'Eight', 9: 'Nine', 10: 'Ten',
+               11: 'Jack', 12: 'Queen', 13: 'King', 14: 'Ace'}
 
-    def discard(self):
-        discard_index = random.randrange(len(self.cards))
-        card = self.cards[discard_index]
-        del(self.cards[discard_index])
-        return card
+suits = ['♠', '♦', '♥', '♣']
 
-    def draw(self):
-        draw_index = random.randrange(len(self.cards))
-        card = self.cards[draw_index]
-        del(self.cards[draw_index])
-        return card
+suit_string = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
 
+
+def init_deck():
+    deck = []
+    for f in faces:
+        for s in suits:
+            deck.append((f, s))
+    random.shuffle(deck)
+    return deck
+
+
+def deal_hand(deck):
+    hand = []
+    hand.append(deck.pop())
+    hand.append(deck.pop())
+    return deck, hand
+
+
+def deal_board(deck):
+    board = []
+    deal_flop(deck, board)
+    deal_turn(deck, board)
+    deal_river(deck, board)
+    return deck, board
+
+
+def deal_flop(deck, board):
+    deck.pop()
+    for i in range(3):
+        board.append(deck.pop())
+    return deck, board
+
+
+def deal_turn(deck, board):
+    deck.pop()
+    board.append(deck.pop())
+    return deck, board
+
+
+def deal_river(deck, board):
+    deck.pop()
+    board.append(deck.pop())
+    return deck, board
+
+
+def get_numbers(hand, board):
+    """
+    Returns a dictionary where the keys are the numerical values (Jack = 11)
+    and the entries are the count of each value in the hand and board
+    """
+    numbers = {}
+    for card in hand + board:
+        if card[0] in numbers:
+            numbers[card[0]] += 1
+        else:
+            numbers[card[0]] = 1
+    return numbers
+
+
+def get_suits(hand, board):
+    """
+    Returns a dictionary where the keys are the suits
+    and the entries are the count of each suit in the hand and board
+    """
+    suits = {}
+    for card in hand + board:
+        if card[1] in suits:
+            suits[card[1]] += 1
+        else:
+            suits[card[1]] = 1
+    return suits
+
+
+def card_to_string(card):
+    return "[" + faces[card[0]] + " of  " + card[1] + "]"

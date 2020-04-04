@@ -1,132 +1,140 @@
-from Objects.Utils import *
+from Objects.Cards import *
 
-def high_card(thn, n, s):
-    to_numeric = {
-        'T' : 10,
-        'J' : 11,
-        'Q' : 12,
-        'K' : 13,
-        'A' : 14
-    }
+def high_card(n):
+    """Returns an int representing the highest card"""
+    return True, max(n)
 
-    to_card = {
-        10 : 'T',
-        11 : 'J',
-        12 : 'Q',
-        13 : 'K',
-        14 : 'A'
-    }
 
-    numeric = []
-    for c in thn:
-        if c in to_numeric:
-            numeric.append(to_numeric[c])
-        else:
-            numeric.append(int(c))
-    r_mc = max(numeric)
-    mc = None
-
-    if r_mc in to_card:
-        mc = to_card[r_mc]
+def one_pair(n):
+    """Returns an int representing the highest pair"""
+    pairs = []
+    for k in n:
+        if n[k] == 2:
+            pairs.append(k)
+    if len(pairs) == 0:
+        return False, None
     else:
-        mc = str(r_mc)
+        return True, max(pairs)
 
-    if len(n) == 0 and len(s) == 0:
-        return (mc, True)
+
+def two_pair(n):
+    """Returns a tuple of two ints representing the two highest pairs"""
+    pairs = []
+    for k in n:
+        if n[k] == 2:
+            pairs.append(k)
+    if len(pairs) < 2:
+        return False, None
     else:
-        return (None, False)
+        pairs.sort()
+        return True, (pairs.pop(), pairs.pop())
 
-def pair(n, s):
-    if len(n) == 1 and len(s) == 0:
-        if n[0][1] == 2:
-            return (n[0][0], True)
-        else:
-            return (None, False)
+
+def three_of_a_kind(n):
+    """Returns an int representing the highest three of a kind"""
+    threes = []
+    for k in n:
+        if n[k] == 3:
+            threes.append(k)
+    if len(threes) == 0:
+        return False, None
     else:
-        return (None, False)
+        return True, max(threes)
 
-def two_pair(n, s):
-    if len(n) == 2 and len(s) == 0:
-        if n[0][1] == 2 and n[1][1] == 2:
-            return ((n[0][0], n[1][0]), True)
-        else:
-            return (None, False)
+
+def straight(n):
+    """Returns an int representing the highest card value 
+    of the highest straight"""
+    numbers = []
+    sub_sequences = []
+    straight = []
+    for k in n:
+        numbers.append(k)  # adds all the unique values of cards available
+    numbers.sort(reverse=True)  # puts them highest to lowest
+    for i in range(len(numbers) - 4):
+        sub_sequences.append(numbers[i:i + 5])
+    for s in sub_sequences:
+        straight_found = True
+        for i in range(4):
+            if s[i] - s[i + 1] != 1:
+                straight_found = False
+        if straight_found == True:
+            straight = s
+    if len(straight) == 0:
+        return False, None
     else:
-        return (None, False)
+        return True, straight[0]
 
-def three_of_a_kind(n ,s):
-    if len(n) == 1 and len(s) == 0:
-        if n[0][1] == 3:
-            return (n[0][0], True)
+
+def flush(s):
+    for k in s:
+        if s[k] >= 5:
+            return True, k
+    return False, None
+
+
+def full_house(n):
+    if (one_pair(n)[0] == True & three_of_a_kind(n)[0] == True):
+        if (one_pair(n)[1] != three_of_a_kind(n)[1]):
+            return True, (one_pair(n)[1], three_of_a_kind(n)[1])
+    return False, None
+
+
+def four_of_a_kind(n):
+    for k in n:
+        if n[k] == 4:
+            return True, k
+    return False, None
+
+
+def straight_flush(hand, board):
+    combined = hand + board
+
+    num_to_suit_map = {}
+    for card in combined:
+        if card[0] not in num_to_suit_map:
+            num_to_suit_map[card[0]] = [card[1]]
         else:
-            return (None, False)
-    else:
-        return (None, False)
+            num_to_suit_map[card[0]].append(card[1])
 
-def straight(hand_numbers):
-    to_numeric = {
-        'T' : 10,
-        'J' : 11,
-        'Q' : 12,
-        'K' : 13,
-        'A' : 14
-    }
-
-    to_card = {
-        10 : 'T',
-        11 : 'J',
-        12 : 'Q',
-        13 : 'K',
-        14 : 'A'
-    }
-
-    no_copies = list(set(hand_numbers))
-    if len(no_copies) < 5:
-        return (None, False)
-    numeric = []
-    for n in no_copies:
-        if n in to_numeric:
-            numeric.append(to_numeric[n])
-        else:
-            numeric.append(int(n))
+    numbers_in_hand = sorted(list(set(list(num_to_suit_map.keys()))))
+    if len(numbers_in_hand) < 5:
+        return False, None
 
     potential_straights = []
 
-    for card_range in ranges(numeric):
-        if card_range[1] - card_range[0] >= 4:
-            potential_straights.append(card_range)
+    for i in range(len(numbers_in_hand) - 5):
+        starting_num = numbers_in_hand[i]
+        is_potential_straight = numbers_in_hand[i:i + 5] == list(range(starting_num, starting_num + 5))
+        if is_potential_straight:
+            potential_straights.append(numbers_in_hand[i:i+5])
 
-    if len(potential_straights) == 0:
-        return (None, False)
+    straight_flushes = []
 
-    best_straight = potential_straights[-1]
-    ending_card = best_straight[-1]
+    if len(potential_straights) > 0:
+        all_cards_in_suit = {suit : False for suit in suits}
+        for i in range(len(potential_straights)):
+            straight = potential_straights[i]
+            for suit in suits:
+                straight_flush = [suit in num_to_suit_map[num] for num in straight] == [True, True, True, True, True]
+                if straight_flush:
+                    straight_flushes.append([suit, potential_straights[i]])
 
-    raw_straight_cards = reversed(list(range(ending_card, ending_card - 5, -1)))
-
-    straight_cards = []
-    for number in raw_straight_cards:
-        if number in to_card:
-            straight_cards.append(to_card[number])
+        if straight_flushes != []:
+            highest_straight_flush = straight_flushes[-1]
+            return True, (highest_straight_flush[0], highest_straight_flush[1][-1])
         else:
-            straight_cards.append(str(number))
-
-    return (straight_cards, True)
-
-def full_house(n, s):
-    if len(n) == 2 and len(s) == 0:
-        if n[0][1] == 2 and n[1][1] == 3 or n[0][1] == 3 and n[1][1] == 2:
-            return ((n[0][0], n[1][0]), True)
-        else:
-            return (None, False)
+            return False, None
     else:
-        return (None, False)
+        return False, None
 
-def flush(s):
-    if len(s) == 1:
-        if s[0][1] >= 5:
-            return (s[0][0], True)
+
+def royal_flush(hand, board):
+    is_flush, info = straight_flush(hand, board)
+    if is_flush:
+        if info[1] == 14:
+            return True, info[0]
         else:
-            return (None, False)
+            return False, None
     else:
-        return (None, False)
+        return False, None
