@@ -48,23 +48,23 @@ def play_game(verbose=True):
     straight_flush_check, y = straight_flush(hand, board)
     if straight_flush_check == True:
         if verbose: print("***** STRAIGHT FLUSH ****: Straight flush ending in " + face_string[y])
-#    royal_flush_check, y = royal_flush(hand, board)
-#    if royal_flush_check == True:
-#        print("***** ROYAL FLUSH ****: Straight flush of suit " + y + ".")
+    royal_flush_check, y = royal_flush(hand, board)
+    if royal_flush_check == True:
+        print("***** ROYAL FLUSH ****: Straight flush ending in  " + face_string[y] + ".")
     if verbose: print(
         "----------------------------------------------------------------------------------------------------------")
         
     return(high_check, pair_check, two_pair_check, three_check,  straight_check, flush_check,
-           full_house_check, four_check,  straight_flush_check)
+           full_house_check, four_check,  straight_flush_check, royal_flush_check)
 
 checks = {'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0,
-          'flush': 0, 'full_house': 0, 'four': 0, 'straight_flush' : 0}
+          'flush': 0, 'full_house': 0, 'four': 0, 'straight_flush': 0, 'royal_flush': 0}
 
-num_deals = 10000
+num_deals = 1000
 
 for i in range(num_deals):
     
-    a, b, c, d, e, f, g, h, i = play_game(verbose=True)
+    a, b, c, d, e, f, g, h, i, j = play_game(verbose=True)
 
     if h == True:
         checks['four'] += 1
@@ -86,8 +86,24 @@ for i in range(num_deals):
         checks['four'] += 1
     if i == True:
         checks['straight_flush'] += 1
-#    if j == True:
-#        checks['royal_flush'] += 1
+    if j == True:
+        checks['royal_flush'] += 1
         
 print("Below is the count of each hand that could have been played in " + str(num_deals) + " deals")   
 print(checks)
+
+hand = [(14, '♥'), (13, '♥')]
+board = [(12, '♥'), (11, '♥'), (10, '♥'), (9, '♥'), (8, '♥')]
+
+def royal_flush_test(hand, board):
+    x, y = royal_flush(hand, board)
+    if x == True:
+        print("Royal Flush works!, Highest card is :", y)
+    else:
+        print("Royal Flush does not work.")
+        
+#royal_flush_test(hand, board)
+
+
+
+

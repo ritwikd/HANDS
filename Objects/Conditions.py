@@ -57,8 +57,6 @@ def straight(hand, board):
         else:
             suits[card[1]].append(card[0])
             
-    print(suits)
-            
     for s in suits:
         for i in suits[s]:
             if i not in numbers:
@@ -81,7 +79,7 @@ def straight(hand, board):
             straights.append(z)
             
     if len(straights) == 0:
-        return False, (None, None)
+        return False, (None, False)
     
     for s in suits:
         for v in straights:
@@ -99,8 +97,8 @@ def flush(s):
 
 
 def full_house(n):
-    if (one_pair(n)[0] == True & three_of_a_kind(n)[0] == True):
-        if (one_pair(n)[1] != three_of_a_kind(n)[1]):
+    if one_pair(n)[0] & three_of_a_kind(n)[0]:
+        if one_pair(n)[1] != three_of_a_kind(n)[1]:
             return True, (one_pair(n)[1], three_of_a_kind(n)[1])
     return False, None
 
@@ -114,18 +112,15 @@ def four_of_a_kind(n):
 
 def straight_flush(hand, board):
     x, y = straight(hand, board)
-    if y[1] == True:
+    if x == True and y[1] == True:
         return True, y[0]
-    else:
-        return False, None
+    return False, None
 
 
-#def royal_flush(hand, board):
-#    is_flush, info = straight_flush(hand, board)
-#    if is_flush:
-#        if info[1] == 14:
-#            return True, info[0]
-#        else:
-#            return False, None
-#    else:
-#        return False, None
+def royal_flush(hand, board):
+    x, y = straight_flush(hand, board)
+    if x == True and y == 14:
+        return True, y
+    return False, None
+   
+    
