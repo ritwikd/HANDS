@@ -63,7 +63,7 @@ def play_game(verbose=True):
 checks = {'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0,
           'flush': 0, 'full_house': 0, 'four': 0, 'straight_flush': 0, 'royal_flush': 0}
 
-num_deals = 1000000
+num_deals = 265200000
 
 hand_probabilities = {}
 

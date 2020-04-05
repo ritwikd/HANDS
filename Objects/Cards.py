@@ -11,6 +11,13 @@ face_string = {2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',
 
 suits = ['♠', '♦', '♥', '♣']
 
+suit_letter_to_string_map = {
+    'S': '♠',
+    'D': '♦',
+    'H': '♥',
+    'C': '♣'
+}
+
 suit_string = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
 
 
