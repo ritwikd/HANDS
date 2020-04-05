@@ -40,32 +40,57 @@ def three_of_a_kind(n):
         return False, None
     else:
         return True, max(threes)
-
-
-def straight(n):
+    
+    
+def straight(hand, board):
     """Returns an int representing the highest card value 
     of the highest straight"""
+    suits = {}
     numbers = []
-    sub_sequences = []
-    straight = []
-    for k in n:
-        numbers.append(k)  # adds all the unique values of cards available
-    numbers.sort(reverse=True)  # puts them highest to lowest
+    sequences = []
+    straights = []
+    flush = False
+    
+    for card in hand + board:
+        if card[1] not in suits:
+            suits[card[1]] = [card[0]]
+        else:
+            suits[card[1]].append(card[0])
+            
+    print(suits)
+            
+    for s in suits:
+        for i in suits[s]:
+            if i not in numbers:
+                numbers.append(i) 
+                
+    numbers.sort(reverse = True)
+    
     for i in range(len(numbers) - 4):
-        sub_sequences.append(numbers[i:i + 5])
-    for s in sub_sequences:
-        straight_found = True
+        seq = []
+        for j in range(5):
+            seq.append(numbers[i + j])
+        sequences.append(seq)
+        
+    for z in sequences:
+        potential_straight = True
         for i in range(4):
-            if s[i] - s[i + 1] != 1:
-                straight_found = False
-        if straight_found == True:
-            straight = s
-    if len(straight) == 0:
-        return False, None
-    else:
-        return True, straight[0]
+            if z[i] - z[i + 1] != 1:
+                potential_straight = False
+        if potential_straight:
+            straights.append(z)
+            
+    if len(straights) == 0:
+        return False, (None, None)
+    
+    for s in suits:
+        for v in straights:
+            if v[0] in suits[s] and v[1] in suits[s] and v[2] in suits[s] and v[3] in suits[s] and v[4] in suits[s]:
+                flush = True
+                
+    return True, (straights[0][0], flush)
 
-
+        
 def flush(s):
     for k in s:
         if s[k] >= 5:
@@ -88,53 +113,19 @@ def four_of_a_kind(n):
 
 
 def straight_flush(hand, board):
-    combined = hand + board
-
-    num_to_suit_map = {}
-    for card in combined:
-        if card[0] not in num_to_suit_map:
-            num_to_suit_map[card[0]] = [card[1]]
-        else:
-            num_to_suit_map[card[0]].append(card[1])
-
-    numbers_in_hand = sorted(list(set(list(num_to_suit_map.keys()))))
-    if len(numbers_in_hand) < 5:
-        return False, None
-
-    potential_straights = []
-
-    for i in range(len(numbers_in_hand) - 5):
-        starting_num = numbers_in_hand[i]
-        is_potential_straight = numbers_in_hand[i:i + 5] == list(range(starting_num, starting_num + 5))
-        if is_potential_straight:
-            potential_straights.append(numbers_in_hand[i:i+5])
-
-    straight_flushes = []
-
-    if len(potential_straights) > 0:
-        all_cards_in_suit = {suit : False for suit in suits}
-        for i in range(len(potential_straights)):
-            straight = potential_straights[i]
-            for suit in suits:
-                straight_flush = [suit in num_to_suit_map[num] for num in straight] == [True, True, True, True, True]
-                if straight_flush:
-                    straight_flushes.append([suit, potential_straights[i]])
-
-        if straight_flushes != []:
-            highest_straight_flush = straight_flushes[-1]
-            return True, (highest_straight_flush[0], highest_straight_flush[1][-1])
-        else:
-            return False, None
+    x, y = straight(hand, board)
+    if y[1] == True:
+        return True, y[0]
     else:
         return False, None
 
 
-def royal_flush(hand, board):
-    is_flush, info = straight_flush(hand, board)
-    if is_flush:
-        if info[1] == 14:
-            return True, info[0]
-        else:
-            return False, None
-    else:
-        return False, None
+#def royal_flush(hand, board):
+#    is_flush, info = straight_flush(hand, board)
+#    if is_flush:
+#        if info[1] == 14:
+#            return True, info[0]
+#        else:
+#            return False, None
+#    else:
+#        return False, None
