@@ -14,7 +14,7 @@
          <h3 class="title-sub">Helpful Assistant Not Drawing Suspicion</h3>
       </div>
       <div class="body-card content-card">
-         <div class="card-table">
+         <div class="multicard card-table">
             <div class="dropdown" id="table-first-wrapper">
                <button class="btn btn-secondary dropdown-toggle" type="button"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                <img class="display-card" id="table-card-1" src="{{ url_for('static',filename='assets/cards/back.png')}}"></img>
@@ -52,7 +52,7 @@
             </div>
              <h3>Table</h3>
          </div>
-         <div class="card-hand">
+         <div class="multicard card-hand">
             <div class="dropdown" id="hand-first-wrapper">
                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                <img class="display-card" id="hand-card-1" src="{{ url_for('static',filename='assets/cards/back.png')}}"></img>
@@ -69,6 +69,11 @@
             </div>
              <h3>Hand</h3>
          </div>
+          <div class="compute">
+              <div class="compute-button-wrapper">
+                <button type="button" class="btn btn-primary compute-button">Compute Probabilities</button>
+              </div>
+          </div>
       </div>
    </body>
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
@@ -77,7 +82,7 @@
    <script>
       // Game Management System - All in JS
       // ♠ ♦ ♥ ♣
-      
+
       // var sendData = {
       //     "hand" : [[11, "♠"], [7, "♦"]],
       //     "board" : [[8, "♣"], [14, "♥"], [6, "♣"]],
@@ -102,33 +107,35 @@
       //       console.log(response);
       //     });
       // });
-      
+
       faces = {2: '2 ', 3: '3 ', 4: '4 ', 5: '5 ',
        6: '6 ', 7: '7 ', 8: '8 ', 9: '9 ', 10: '10',
        11: 'J ', 12: 'Q ', 13: 'K ', 14: 'A '};
-      
+
       face_string = {2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',
              6: 'Six', 7: "Seven", 8: 'Eight', 9: 'Nine', 10: 'Ten',
              11: 'Jack', 12: 'Queen', 13: 'King', 14: 'Ace'};
-      
+
       suits = ['♠', '♦', '♥', '♣'];
-      
+
       suit_char_to_string = {
           '♠' : 'spades',
           '♦' : 'diamonds',
           '♥' : 'hearts',
           '♣' : 'clubs'
       };
-      
+
       face_num_to_string = {
           11 : 'jack',
           12 : 'queen',
           13 : 'king',
           14 : 'ace'
       };
-      
+
       let deck = [];
-      
+
+      $(".compute").css("min-height", $(".card-hand").height() + 30);
+
       let generateDeck = function () {
           let tempDeck = [];
           for (face in faces) {
@@ -138,9 +145,9 @@
           }
           return tempDeck;
       };
-      
+
       deck = generateDeck();
-      
+
       let populateDropdown = function(element) {
            for (let i = 0; i < deck.length; i++){
               let card_raw = deck[i];
@@ -163,18 +170,18 @@
               element.appendChild(link_item);
             }
       };
-      
+
       let emptyDropdown = function(element) {
           while (element.firstChild) {
               element.removeChild(element.firstChild);
           }
       };
-      
+
       let refreshDropdown = function(element) {
           emptyDropdown(element);
           populateDropdown(element);
       };
-      
+
       let refreshAll = function() {
           refreshDropdown(document.getElementById("hand-first-card"));
           refreshDropdown(document.getElementById("hand-second-card"));
@@ -184,11 +191,11 @@
           refreshDropdown(document.getElementById('table-fourth-card'));
           refreshDropdown(document.getElementById('table-fifth-card'));
       };
-      
-      
+
+
       let currentCards = [null, null, null, null, null, null, null]
-      
-      
+
+
       populateDropdown(document.getElementById("hand-first-card"));
       populateDropdown(document.getElementById("hand-second-card"));
       populateDropdown(document.getElementById('table-first-card'));
@@ -196,7 +203,7 @@
       populateDropdown(document.getElementById('table-third-card'));
       populateDropdown(document.getElementById('table-fourth-card'));
       populateDropdown(document.getElementById('table-fifth-card'));
-      
+
       $('#hand-first-card').on('click', 'a', function(){
           let card_raw = $(this).data('card');
           let card_suit = suit_char_to_string[card_raw[1]];
@@ -208,8 +215,8 @@
           }
           let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
           $('#hand-card-1').attr('src', image_file);
-          currentCards[0] = card_raw.toString();
-      
+          currentCards[0] = card_raw;
+
           if (currentCards[1] != null) {
               if (currentCards[1].toString() == card_raw.toString()) {
                   $('#hand-card-2').attr('src', '../static/assets/cards/back.png');
@@ -246,18 +253,18 @@
                   currentCards[6] = null;
               }
           }
-      
+
           deck = generateDeck();
           deck = deck.filter(function(card) {
-              return currentCards.indexOf(card.toString()) == -1;
+              return currentCards.map(String).indexOf(card.toString()) == -1;
           });
           console.log(deck.length);
-      
+
           refreshAll();
-      
-      
+
+
       });
-      
+
       $('#hand-second-card').on('click', 'a', function(){
           let card_raw = $(this).data('card');
           let card_suit = suit_char_to_string[card_raw[1]];
@@ -269,7 +276,7 @@
           }
           let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
           $('#hand-card-2').attr('src', image_file);
-          currentCards[1] = card_raw.toString();
+          currentCards[1] = card_raw;
           if (currentCards[0] != null) {
               if (currentCards[0].toString() == card_raw.toString()) {
                   $('#hand-card-1').attr('src', '../static/assets/cards/back.png');
@@ -306,16 +313,16 @@
                   currentCards[6] = null;
               }
           }
-      
+
           deck = generateDeck();
           deck = deck.filter(function(card) {
-              return currentCards.indexOf(card.toString()) == -1;
+              return currentCards.map(String).indexOf(card.toString()) == -1;
           });
           console.log(deck.length);
           refreshAll();
-      
+
       });
-      
+
       $('#table-first-card').on('click', 'a', function(){
           let card_raw = $(this).data('card');
           let card_suit = suit_char_to_string[card_raw[1]];
@@ -327,7 +334,7 @@
           }
           let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
           $('#table-card-1').attr('src', image_file);
-          currentCards[2] = card_raw.toString();
+          currentCards[2] = card_raw;
           if (currentCards[0] != null) {
               if (currentCards[0].toString() == card_raw.toString()) {
                   $('#hand-card-1').attr('src', '../static/assets/cards/back.png');
@@ -364,16 +371,16 @@
                   currentCards[6] = null;
               }
           }
-      
+
           deck = generateDeck();
           deck = deck.filter(function(card) {
-              return currentCards.indexOf(card.toString()) == -1;
+              return currentCards.map(String).indexOf(card.toString()) == -1;
           });
           console.log(deck.length);
           refreshAll();
-      
+
       });
-      
+
       $('#table-second-card').on('click', 'a', function(){
           let card_raw = $(this).data('card');
           let card_suit = suit_char_to_string[card_raw[1]];
@@ -385,7 +392,7 @@
           }
           let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
           $('#table-card-2').attr('src', image_file);
-          currentCards[3] = card_raw.toString();
+          currentCards[3] = card_raw;
           if (currentCards[0] != null) {
               if (currentCards[0].toString() == card_raw.toString()) {
                   $('#hand-card-1').attr('src', '../static/assets/cards/back.png');
@@ -423,14 +430,14 @@
                   currentCards[6] = null;
               }
           }
-      
+
           deck = generateDeck();
           deck = deck.filter(function(card) {
-              return currentCards.indexOf(card.toString()) == -1;
+              return currentCards.map(String).indexOf(card.toString()) == -1;
           });
           console.log(deck.length);
           refreshAll();
-      
+
       });
 
       $('#table-third-card').on('click', 'a', function(){
@@ -444,7 +451,7 @@
           }
           let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
           $('#table-card-3').attr('src', image_file);
-          currentCards[4] = card_raw.toString();
+          currentCards[4] = card_raw;
           if (currentCards[0] != null) {
               if (currentCards[0].toString() == card_raw.toString()) {
                   $('#hand-card-1').attr('src', '../static/assets/cards/back.png');
@@ -485,7 +492,7 @@
 
           deck = generateDeck();
           deck = deck.filter(function(card) {
-              return currentCards.indexOf(card.toString()) == -1;
+              return currentCards.map(String).indexOf(card.toString()) == -1;
           });
           console.log(deck.length);
           refreshAll();
@@ -503,7 +510,7 @@
           }
           let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
           $('#table-card-4').attr('src', image_file);
-          currentCards[5] = card_raw.toString();
+          currentCards[5] = card_raw;
           if (currentCards[0] != null) {
               if (currentCards[0].toString() == card_raw.toString()) {
                   $('#hand-card-1').attr('src', '../static/assets/cards/back.png');
@@ -544,7 +551,7 @@
 
           deck = generateDeck();
           deck = deck.filter(function(card) {
-              return currentCards.indexOf(card.toString()) == -1;
+              return currentCards.map(String).indexOf(card.toString()) == -1;
           });
           console.log(deck.length);
           refreshAll();
@@ -562,7 +569,7 @@
           }
           let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
           $('#table-card-5').attr('src', image_file);
-          currentCards[6] = card_raw.toString();
+          currentCards[6] = card_raw;
           if (currentCards[0] != null) {
               if (currentCards[0].toString() == card_raw.toString()) {
                   $('#hand-card-1').attr('src', '../static/assets/cards/back.png');
@@ -603,7 +610,7 @@
 
           deck = generateDeck();
           deck = deck.filter(function(card) {
-              return currentCards.indexOf(card.toString()) == -1;
+              return currentCards.map(String).indexOf(card.toString()) == -1;
           });
           console.log(deck.length);
           refreshAll();
@@ -611,7 +618,7 @@
       });
 
 
-      
+
    </script>
 </html>
 

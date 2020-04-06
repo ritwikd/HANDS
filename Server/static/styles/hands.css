@@ -28,9 +28,12 @@ body {
     box-shadow: 10px 10px 0px 0px rgba(0,0,0,0.2);
 }
 
+.body-card {
+    overflow: auto;
+}
+
 .title-main {
     font-size: 72px;
-    text-align: center;
     font-weight: 500;
     margin: 0px;
     text-decoration: underline;
@@ -39,9 +42,8 @@ body {
 
 .title-sub {
     margin: 25px 0px 0px;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 300;
-    text-align: center;
 }
 
 .dropdown-render-card {
@@ -112,7 +114,7 @@ body {
 
 .card-hand {
     display: block;
-    margin: 25px auto 0px;
+    margin: 25px 25px;
     width: 500px;
     padding:10px;
     text-align: center;
@@ -125,6 +127,24 @@ body {
     background:
      url("../assets/felt.png") padding-box, /*this is your grey background*/
      repeating-linear-gradient(40deg, hsl(30, 50%, 15%), hsl(20, 50%, 30%), hsl(25, 40%, 20%) 5px) border-box;
+    float: left;
+}
+
+.compute {
+    display: block;
+    margin-top: 25px;
+    margin-right: 25px;
+    width: 275px;
+    padding:10px;
+    border: double 5px transparent;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+     background-size: 10px;
+    background:
+     url("../assets/felt.png") padding-box, /*this is your grey background*/
+     repeating-linear-gradient(40deg, hsl(30, 50%, 15%), hsl(20, 50%, 30%), hsl(25, 40%, 20%) 5px) border-box;
+    float: right;
 }
 
 /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
@@ -172,6 +192,14 @@ body {
     border: none;
 }
 
-h3 {
+.multicard h3 {
     margin-top: 15px;
+}
+
+.compute-button {
+}
+
+.compute-button-wrapper {
+    width: 100%;
+    text-align: center;
 }
