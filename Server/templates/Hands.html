@@ -14,14 +14,140 @@
 
         <div class="body-card content-card">
             <div class="instructions">
-                <button type="button" class="btn btn-primary">New Game</button>
+                <button type="button" class="btn btn-primary new-game">New Game</button>
+
+                <br><br>
+
+                <div class="card-card">
+
+                    <img class="display-card" src="{{ url_for('static',filename='assets/cards/back.png')}}"></img>
+                    <img class="display-card" src="{{ url_for('static',filename='assets/cards/back.png')}}"></img>
+
+                </div>
+
+                <div class="form-card">
+
+                    <div class="dropdown" id="hand-first-wrapper">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hand
+                      </button>
+                      <div class="dropdown-menu card-dropdown hand-dropdown"  id="hand-first-card" aria-labelledby="dropdownMenuButton">
+                      </div>
+                    </div>
+
+                    <div class="dropdown" id="hand-second-wrapper">
+                      <button class="btn btn-secondary dropdown-toggle" type="button"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hand
+                      </button>
+                      <div class="dropdown-menu card-dropdown hand-dropdown" id="hand-second-card" aria-labelledby="dropdownMenuButton">
+                      </div>
+                    </div>
+                </div>
             </div>
         </div>
 
 
 
     </body>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script>
+        // Game Management System - All in JS
+        // ♠ ♦ ♥ ♣
+
+        // var sendData = {
+        //     "hand" : [[11, "♠"], [7, "♦"]],
+        //     "board" : [[8, "♣"], [14, "♥"], [6, "♣"]],
+        //     "runs" : 10000
+        // };
+        //
+        //
+        // jQuery('.new-game').click(function() {
+        //     var settings = {
+        //       "async": true,
+        //       "crossDomain": true,
+        //       "url": "/api/hand-chances/",
+        //       "method": "POST",
+        //       "headers": {
+        //         "content-type": "application/json"
+        //       },
+        //       "processData": false,
+        //         "data": JSON.stringify(sendData)
+        //     }
+        //
+        //     $.ajax(settings).done(function (response) {
+        //       console.log(response);
+        //     });
+        // });
+
+        faces = {2: '2 ', 3: '3 ', 4: '4 ', 5: '5 ',
+         6: '6 ', 7: '7 ', 8: '8 ', 9: '9 ', 10: '10',
+         11: 'J ', 12: 'Q ', 13: 'K ', 14: 'A '};
+
+        face_string = {2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',
+               6: 'Six', 7: "Seven", 8: 'Eight', 9: 'Nine', 10: 'Ten',
+               11: 'Jack', 12: 'Queen', 13: 'King', 14: 'Ace'};
+
+        suits = ['♠', '♦', '♥', '♣'];
+
+        suit_char_to_string = {
+            '♠' : 'spades',
+            '♦' : 'diamonds',
+            '♥' : 'hearts',
+            '♣' : 'clubs'
+        };
+
+        face_num_to_string = {
+            11 : 'jack',
+            12 : 'queen',
+            13 : 'king',
+            14 : 'ace'
+        };
+
+        let deck = [];
+
+        for (face in faces) {
+            for (suit of suits) {
+                deck.push([face, suit]);
+            }
+        }
+
+        let populateDropdown = function(element) {
+             for (let i = 0; i < deck.length; i++){
+                let card_raw = deck[i];
+                let card_suit = suit_char_to_string[card_raw[1]];
+                let card_num = card_raw[0];
+                if (card_num > 10) {
+                    card_num = face_num_to_string[card_num];
+                } else {
+                    card_num = card_num.toString();
+                }
+                let image_file = card_num + '_of_' + card_suit + '.png';
+                let li = document.createElement("a");
+                li.className = 'dropdown-item';
+                let card_picture = document.createElement('img');
+                card_picture.src = "{{ url_for('static',filename='assets/cards/')}}" + image_file;
+                card_picture.className = 'dropdown-render-card';
+                li.appendChild(card_picture);
+                li.href = "#";
+                li.setAttribute('data-card', card_raw);
+                element.appendChild(li);
+              }
+        };
+
+        let emptyDropdown = function(element) {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        };
+
+        $('.new-game').click(function() {
+            $('#hand-first-wrapper').css('display', 'inline-block');
+        });
+
+
+
+        populateDropdown(document.getElementById("hand-first-card"));
+    </script>
 </html>

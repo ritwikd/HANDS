@@ -4,6 +4,10 @@
     font-family: 'Rubik', sans-serif;
 }
 
+html {
+     background: #35654d !important;
+}
+
 body {
     margin-top: 50px;
     width:800px;
@@ -38,4 +42,77 @@ body {
     font-size: 21px;
     font-weight: 300;
     text-align: center;
+}
+
+.dropdown-render-card {
+    max-height: 75px;
+    border: 0.5px #000 solid;
+    border-radius: 3px;
+    background-color: #FFF;
+    padding: 3px;
+}
+
+.display-card {
+    border: 2px #FFF solid;
+    border-radius: 5px;
+    background-color: #FFF;
+    margin-right:10px;
+    width: 100px;
+}
+
+.dropdown-menu.show {
+  display: flex;
+  width: 800px;
+  flex-wrap: wrap;
+}
+
+.dropdown-menu {
+    padding: 10px;
+}
+
+.dropdown-item {
+    width: 75px;
+    text-align: center;
+    padding: 10px 0px;
+    border-radius: 4px;
+    margin: 5px 0px;
+}
+
+.dropdown-menu > a {
+    -webkit-transition: all 100ms linear;
+    -moz-transition: all 100ms linear;
+    -ms-transition: all 100ms linear;
+    -o-transition: all 100ms linear;
+    transition: all 100ms linear;
+}
+
+.dropdown-menu > a:hover {
+    background-color: #0275d8 !important;
+}
+
+.dropdown {
+    display: none;
+}
+
+.card-card {
+    display: block;
+    margin:10px;
+    padding:10px;
+    #background-color: #35654d;
+    border: double 5px transparent;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+     background-size: 10px;
+    background:
+     url("../assets/felt.png") padding-box, /*this is your grey background*/
+     repeating-linear-gradient(40deg, hsl(30, 50%, 15%), hsl(20, 50%, 30%), hsl(25, 40%, 20%) 5px) border-box;
+}
+
+/* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+
+.form-card {
+    display: block;
+    margin:10px;
+    padding:10px;
 }
