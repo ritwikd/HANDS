@@ -54,7 +54,7 @@ def play_game(verbose=True):
     if verbose: print(
         "----------------------------------------------------------------------------------------------------------")
         
-    return(high_check, pair_check, two_pair_check, three_check,  straight_check, flush_check,
+    return(high_check, pair_check, two_pair_check, three_check, straight_check, flush_check,
            full_house_check, four_check,  straight_flush_check, royal_flush_check)
 
 checks = {'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0,

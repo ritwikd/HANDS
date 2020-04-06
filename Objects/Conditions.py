@@ -1,101 +1,78 @@
 from Objects.Cards import *
 
+
 def high_card(n):
-    """Returns an int representing the highest card"""
     return True, max(n)
 
 
 def one_pair(n):
-    """Returns an int representing the highest pair"""
     pairs = []
     for k in n:
         if n[k] == 2:
             pairs.append(k)
-    if len(pairs) == 0:
-        return False, None
-    return True, max(pairs)
+    if len(pairs) > 0:
+        return True, max(pairs)
+    return False, None
 
 
 def two_pair(n):
-    """Returns a tuple of two ints representing the two highest pairs"""
     pairs = []
     for k in n:
         if n[k] == 2:
             pairs.append(k)
-    if len(pairs) < 2:
-        return False, None
-    pairs.sort()
-    return True, (pairs.pop(), pairs.pop())
+    if len(pairs) >= 2:
+        pairs.sort()
+        return True, (pairs.pop(), pairs.pop())
+    return False, None
 
 
 def three_of_a_kind(n):
-    """Returns an int representing the highest three of a kind"""
     threes = []
     for k in n:
         if n[k] == 3:
             threes.append(k)
-    if len(threes) == 0:
-        return False, None
-    else:
+    if len(threes) > 0:
         return True, max(threes)
-    
+    return False, None
+        
     
 def straight(hand, board):
-    """Returns an int representing the highest card value 
-    of the highest straight and a boolean about whether it's also a flush"""
     suits = {}
     numbers = []
-    sequences = []
+    windows = []
     straights = []
     flush = False
-    
-    # Populates suits (a dictionary) where the keys are the four suits and the
-    # values are lists of card values in that suit
-    for card in hand + board:
-        if card[1] not in suits:
-            suits[card[1]] = [card[0]]
+    flush_suit = 's'
+    for c in hand + board:
+        if c[1] not in suits:
+            suits[c[1]] = [c[0]]
         else:
-            suits[card[1]].append(card[0])
-    
-    # Populates numbers, a list of all the unique card values in the hand    
+            suits[c[1]].append(c[0])
     for s in suits:
-        for i in suits[s]:
-            if i not in numbers:
-                numbers.append(i) 
-                
-    # Sorts the list of unique numbers highest to lowest
+        for n in suits[s]:
+            if n not in numbers:
+                numbers.append(n)       
     numbers.sort(reverse = True)
-    
-    # Populates sequences, a list of five-value sequences
-    for i in range(len(numbers) - 4):
-        seq = []
-        for j in range(5):
-            seq.append(numbers[i + j])
-        sequences.append(seq)
-        
-    # Checks whether each sequence is a straight, and if it is, adds it to straights
-    for z in sequences:
-        potential_straight = True
+    for r in range(len(numbers) - 4):
+        window = []
+        for f in range(5):
+            window.append(numbers[r + f])
+        windows.append(window)
+    for w in windows:
+        potential = True
         for i in range(4):
-            if z[i] - z[i + 1] != 1:
-                potential_straight = False
-        if potential_straight:
-            straights.append(z)
-    
-    # If no straights have been found, quit
-    if len(straights) == 0:
-        return False, (None, False)
-    
-    # Checks whether each straight can be made from all cards of the same suit
-    # If so, then we have a straight flush
-    for s in suits:
-        for v in straights:
-            if v[0] in suits[s] and v[1] in suits[s] and v[2] in suits[s] and v[3] in suits[s] and v[4] in suits[s]:
-                flush = True
-                
-    # Straights[0][0] is the straight ending in the highest card
-    # If it's Ace and flush == true, then it's a royal flush
-    return True, (straights[0][0], flush)
+            if w[i] - w[i + 1] != 1:
+                potential = False
+        if potential == True:
+            straights.append(w)   
+    if len(straights) > 0:
+        for s in suits:
+            for v in straights:
+                if v[0] in suits[s] and v[1] in suits[s] and v[2] in suits[s] and v[3] in suits[s] and v[4] in suits[s]:
+                    flush = True
+                    flush_suit = s
+        return True, (straights[0][0], flush, flush_suit)
+    return False, None
 
         
 def flush(s):
@@ -121,14 +98,14 @@ def four_of_a_kind(n):
 
 def straight_flush(hand, board):
     is_straight, y = straight(hand, board)
-    if is_straight and y[0] != 14 and y[1] == True:
+    if is_straight and y[0] != 14 and y[1]:
         return True, y[0]
     return False, None
 
 
 def royal_flush(hand, board):
     is_straight, y = straight(hand, board)
-    if is_straight and y[0] == 14 and y[1] == True:
+    if is_straight and y[0] == 14 and y[1]:
         return True, y[0]
     return False, None
      
