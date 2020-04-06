@@ -2,109 +2,193 @@
 """
 Created on Sat Mar 28 12:16:42 2020
 
-@author: Lagerstrom
+@author: Lagerstrom, Dutta
 """
 
-import random,json
+import json
 
-from Objects.Cards import *
 from Objects.Conditions import *
 from Objects.Utils import *
 
 
-def play_game(verbose=True):
+def simulate_hand_probability(hand, runs, initial_board=None):
+    to_test = {
+        'flop': False,
+        'turn': False,
+        'river': False,
+    }
+    if not initial_board:
+        initial_board = []
+        to_test = {
+            'flop': True,
+            'turn': True,
+            'river': True,
+        }
+    elif len(initial_board) == 3:
+        to_test['turn'] = True
+        to_test['river'] = True
+    elif len(initial_board) == 4:
+        to_test['river'] = True
+
+    stats = {
+        'flop': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0, 'flush': 0,
+                 'full_house': 0,
+                 'four': 0, 'straight_flush': 0, 'royal_flush': 0},
+        'turn': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0, 'flush': 0,
+                 'full_house': 0,
+                 'four': 0, 'straight_flush': 0, 'royal_flush': 0},
+        'river': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0, 'flush': 0,
+                  'full_house': 0,
+                  'four': 0, 'straight_flush': 0, 'royal_flush': 0}
+    }
+
+    for i in range(runs):
+        sim_deck = init_deck()
+        sim_board = initial_board.copy()
+        for card in hand + sim_board:
+            sim_deck = remove_card(sim_deck, card)
+
+        if to_test['flop']:
+            # Flop Test
+            sim_deck, sim_board = deal_flop(sim_deck, sim_board)
+            n = get_numbers(hand, sim_board)
+            s = get_suits(hand, sim_board)
+
+            stats['flop']['total'] += 1
+
+            high_check, high_y = high_card(n)
+            pair_check, pair_y = one_pair(n)
+            two_pair_check, two_pair_y = two_pair(n)
+            three_check, three_y = three_of_a_kind(n)
+            straight_check, straight_y = straight(n)
+            flush_check, flush_y = flush(s)
+            full_house_check, full_house_y = full_house(n)
+            four_check, four_y = four_of_a_kind(n)
+            straight_flush_check, straight_flush_y = straight_flush(hand, sim_board)
+            royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
+
+            if royal_flush_check:
+                stats['flop']['royal_flush'] += 1
+            elif straight_flush_check:
+                stats['flop']['straight_flush'] += 1
+            elif four_check:
+                stats['flop']['four'] += 1
+            elif full_house_check:
+                stats['flop']['full_house'] += 1
+            elif flush_check:
+                stats['flop']['flush'] += 1
+            elif straight_check:
+                stats['flop']['straight'] += 1
+            elif three_check:
+                stats['flop']['three'] += 1
+            elif two_pair_check:
+                stats['flop']['two_pair'] += 1
+            elif pair_check:
+                stats['flop']['pair'] += 1
+            elif high_check:
+                stats['flop']['high'] += 1
+
+        if to_test['turn']:
+            # Turn Test
+            sim_deck, sim_board = deal_turn(sim_deck, sim_board)
+            n = get_numbers(hand, sim_board)
+            s = get_suits(hand, sim_board)
+
+            stats['turn']['total'] += 1
+
+            high_check, high_y = high_card(n)
+            pair_check, pair_y = one_pair(n)
+            two_pair_check, two_pair_y = two_pair(n)
+            three_check, three_y = three_of_a_kind(n)
+            straight_check, straight_y = straight(n)
+            flush_check, flush_y = flush(s)
+            full_house_check, full_house_y = full_house(n)
+            four_check, four_y = four_of_a_kind(n)
+            straight_flush_check, straight_flush_y = straight_flush(hand, sim_board)
+            royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
+
+            if royal_flush_check:
+                stats['turn']['royal_flush'] += 1
+            elif straight_flush_check:
+                stats['turn']['straight_flush'] += 1
+            elif four_check:
+                stats['turn']['four'] += 1
+            elif full_house_check:
+                stats['turn']['full_house'] += 1
+            elif flush_check:
+                stats['turn']['flush'] += 1
+            elif straight_check:
+                stats['turn']['straight'] += 1
+            elif three_check:
+                stats['turn']['three'] += 1
+            elif two_pair_check:
+                stats['turn']['two_pair'] += 1
+            elif pair_check:
+                stats['turn']['pair'] += 1
+            elif high_check:
+                stats['turn']['high'] += 1
+
+        if to_test['river']:
+            # River Test
+            sim_deck, sim_board = deal_river(sim_deck, sim_board)
+            n = get_numbers(hand, sim_board)
+            s = get_suits(hand, sim_board)
+
+            stats['river']['total'] += 1
+
+            high_check, high_y = high_card(n)
+            pair_check, pair_y = one_pair(n)
+            two_pair_check, two_pair_y = two_pair(n)
+            three_check, three_y = three_of_a_kind(n)
+            straight_check, straight_y = straight(n)
+            flush_check, flush_y = flush(s)
+            full_house_check, full_house_y = full_house(n)
+            four_check, four_y = four_of_a_kind(n)
+            straight_flush_check, straight_flush_y = straight_flush(hand, sim_board)
+            royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
+
+            if royal_flush_check:
+                stats['river']['royal_flush'] += 1
+            elif straight_flush_check:
+                stats['river']['straight_flush'] += 1
+            elif four_check:
+                stats['river']['four'] += 1
+            elif full_house_check:
+                stats['river']['full_house'] += 1
+            elif flush_check:
+                stats['river']['flush'] += 1
+            elif straight_check:
+                stats['river']['straight'] += 1
+            elif three_check:
+                stats['river']['three'] += 1
+            elif two_pair_check:
+                stats['river']['two_pair'] += 1
+            elif pair_check:
+                stats['river']['pair'] += 1
+            elif high_check:
+                stats['river']['high'] += 1
+
+    for step in stats:
+        if to_test[step]:
+            for outcome in stats[step]:
+                if outcome != 'total':
+                    stats[step][outcome] = stats[step][outcome] / float(stats[step]['total'])
+
+    return stats
+
+
+if __name__ == "__main__":
     deck = init_deck()
-    deck, hand = deal_hand(deck)
-    if verbose: show_hand(hand)
-    deck, board = deal_board(deck)
-    if verbose: show_board(board)
-    n = get_numbers(hand, board)
-    s = get_suits(hand, board)
-    if verbose: print("\n")
-
-    high_check, y = high_card(n)
-    if high_check == True:
-        if verbose: print(face_string[y], "High")
-    pair_check, y = one_pair(n)
-    if pair_check == True:
-        if verbose: print("Pair of " + face_string[y] + "s")
-    two_pair_check, y = two_pair(n)
-    if two_pair_check == True:
-        if verbose: print("Two pair! " + face_string[y[0]] + "s and " + face_string[y[1]] + "s")
-    three_check, y = three_of_a_kind(n)
-    if three_check == True:
-        if verbose: print("Three " + face_string[y] + "s!")
-    straight_check, y = straight(n)
-    if straight_check == True:
-        if verbose: print("Straight ending in " + face_string[y] + "!")
-    flush_check, y = flush(s)
-    if flush_check == True:
-        if verbose: print("Flush! Five " + y + "!")
-    full_house_check, y = full_house(n)
-    if full_house_check == True:
-        if verbose: print("Full house: Two " + face_string[y[0]] + "s and three " + face_string[y[1]] + "s!")
-    four_check, y = four_of_a_kind(n)
-    if four_check == True:
-        if verbose: print("**** FOUR OF A KIND: Four " + face_string[y] + "s ! ****")
-    straight_flush_check, y = straight_flush(hand, board)
-    if straight_flush_check == True:
-        if verbose: print(
-            "***** STRAIGHT FLUSH ****: Straight flush of suit " + y[0] + " ending in " + face_string[y[1]])
-    royal_flush_check, y = royal_flush(hand, board)
-    if royal_flush_check == True:
-        print("***** ROYAL FLUSH ****: Straight flush of suit " + y + ".")
-    if verbose: print(
-        "----------------------------------------------------------------------------------------------------------")
-
-    return (hand,high_check, pair_check, two_pair_check, three_check, straight_check, flush_check,
-            full_house_check, four_check, straight_flush_check, royal_flush_check)
-
-
-checks = {'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0,
-          'flush': 0, 'full_house': 0, 'four': 0, 'straight_flush': 0, 'royal_flush': 0}
-
-num_deals = 265200000
-
-hand_probabilities = {}
-
-for i in range(num_deals):
-
-    hand, a, b, c, d, e, f, g, h, i, j = play_game(verbose=False)
-    hand_id = faces[hand[0][0]] + hand[0][1] + '|' + faces[hand[1][0]] + hand[1][1]
-    if hand_id not in hand_probabilities:
-        hand_probabilities[hand_id] = {'total' : 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0,
-          'flush': 0, 'full_house': 0, 'four': 0, 'straight_flush': 0, 'royal_flush': 0}
-
-    hand_probabilities[hand_id]['total'] += 1
-
-    if j:
-        hand_probabilities[hand_id]['royal_flush'] += 1
-    elif i:
-        hand_probabilities[hand_id]['straight_flush'] += 1
-    elif h:
-        hand_probabilities[hand_id]['four'] += 1
-    elif g:
-        hand_probabilities[hand_id]['full_house'] += 1
-    elif f:
-        hand_probabilities[hand_id]['flush'] += 1
-    elif e:
-        hand_probabilities[hand_id]['straight'] += 1
-    elif d:
-        hand_probabilities[hand_id]['three'] += 1
-    elif c:
-        hand_probabilities[hand_id]['two_pair'] += 1
-    elif b:
-        hand_probabilities[hand_id]['pair'] += 1
-    elif a:
-        hand_probabilities[hand_id]['high'] += 1
-
-for hand in hand_probabilities:
-    for outcome in hand_probabilities[hand]:
-        if outcome != 'total':
-            hand_probabilities[hand][outcome] = round(hand_probabilities[hand][outcome]/float(hand_probabilities[hand]['total']), 3)
-
-for hand in hand_probabilities:
-    print(hand, hand_probabilities[hand])
-
-with open('card-probabilities.json', 'w') as file_handler:
-    json.dump(hand_probabilities, file_handler)
+    board = []
+    deck, input_hand = deal_hand(deck)
+    print("Simulating from hand.")
+    stats = simulate_hand_probability(input_hand, 1000, board)
+    print(json.dumps(stats, indent=4, sort_keys=False))
+    deck, board = deal_flop(deck, [])
+    print("Simulating from flop.")
+    stats = simulate_hand_probability(input_hand, 1000, board)
+    print(json.dumps(stats, indent=4, sort_keys=False))
+    deck, board = deal_turn(deck, board)
+    print("Simulating from turn.")
+    stats = simulate_hand_probability(input_hand, 1000, board)
+    print(json.dumps(stats, indent=4, sort_keys=False))

@@ -1,5 +1,7 @@
 import random
 
+from Objects.Utils import *
+
 # Aces high!
 faces = {2: '2 ', 3: '3 ', 4: '4 ', 5: '5 ',
          6: '6 ', 7: '7 ', 8: '8 ', 9: '9 ', 10: '10',
@@ -30,10 +32,14 @@ def init_deck():
     return deck
 
 
+def remove_card(deck, card):
+    card_index = deck.index(card)
+    del deck[card_index]
+    return deck
+
+
 def deal_hand(deck):
-    hand = []
-    hand.append(deck.pop())
-    hand.append(deck.pop())
+    hand = [deck.pop(), deck.pop()]
     return deck, hand
 
 
@@ -90,7 +96,3 @@ def get_suits(hand, board):
         else:
             suits[card[1]] = 1
     return suits
-
-
-def card_to_string(card):
-    return "[" + faces[card[0]] + " of  " + card[1] + "]"

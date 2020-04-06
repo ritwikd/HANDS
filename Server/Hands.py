@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request
+from flask import *
 from Objects.Cards import *
 
 app = Flask(__name__)
@@ -22,8 +22,8 @@ def get_hand_chance():
 
 
 @app.route('/')
-def hello_world():
-    return 'Hello World'
+def hands():
+    return render_template("Hands.html")
 
 
 if __name__ == '__main__':
