@@ -617,9 +617,6 @@
     };
 
     $('.compute-button').on('click', function () {
-        $('.compute-results-heading').html("<b style='text-align: center;'>Computation in progess.</b>");
-        $('.results-left').html('');
-        $('.results-right').html('');
         let [valid, message] = checkValidState();
         if (!valid) {
             $.notify({
@@ -636,6 +633,9 @@
                 delay : 3000
             });
         } else {
+            $('.compute-results-heading').html("<b style='text-align: center;'>Computation in progess.</b>");
+            $('.results-left').html('');
+            $('.results-right').html('');
             let cardsToSend = currentCards;
             var sendData = {
                 "hand" : [cardsToSend[0], cardsToSend[1]],
