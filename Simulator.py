@@ -5,13 +5,23 @@ Created on Sat Mar 28 12:16:42 2020
 @author: Lagerstrom, Dutta
 """
 
-import json
+# Deck creation, manipulation, and drawing
+from Objects.Cards import init_deck, remove_card, deal_flop
+from Objects.Cards import deal_turn, deal_river, deal_hand
 
-from Objects.Conditions import *
-from Objects.Utils import *
+# Card list analysis
+from Objects.Cards import get_numbers, get_suits
+
+# Win condition checking
+from Objects.Conditions import high_card, one_pair, two_pair, three_of_a_kind
+from Objects.Conditions import four_of_a_kind, full_house, flush, straight
+from Objects.Conditions import royal_flush, straight_flush
 
 
 def simulate_hand_probability(hand, runs, initial_board=None):
+    """Get probabilities of each condition being your best condition
+        with the given hand and board, including simulating a flop,
+        turn, or river as required."""
     to_test = {
         'flop': False,
         'turn': False,
@@ -31,15 +41,15 @@ def simulate_hand_probability(hand, runs, initial_board=None):
         to_test['river'] = True
 
     stats = {
-        'flop': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0, 'flush': 0,
-                 'full_house': 0,
-                 'four': 0, 'straight_flush': 0, 'royal_flush': 0},
-        'turn': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0, 'flush': 0,
-                 'full_house': 0,
-                 'four': 0, 'straight_flush': 0, 'royal_flush': 0},
-        'river': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0, 'straight': 0, 'flush': 0,
-                  'full_house': 0,
-                  'four': 0, 'straight_flush': 0, 'royal_flush': 0}
+        'flop': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0,
+                 'straight': 0, 'flush': 0, 'full_house': 0, 'four': 0,
+                 'straight_flush': 0, 'royal_flush': 0},
+        'turn': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0,
+                 'straight': 0, 'flush': 0, 'full_house': 0, 'four': 0,
+                 'straight_flush': 0, 'royal_flush': 0},
+        'river': {'total': 0, 'high': 0, 'pair': 0, 'two_pair': 0, 'three': 0,
+                  'straight': 0, 'flush': 0, 'full_house': 0, 'four': 0,
+                  'straight_flush': 0, 'royal_flush': 0}
     }
 
     for i in range(runs):
@@ -64,7 +74,8 @@ def simulate_hand_probability(hand, runs, initial_board=None):
             flush_check, flush_y = flush(s)
             full_house_check, full_house_y = full_house(n)
             four_check, four_y = four_of_a_kind(n)
-            straight_flush_check, straight_flush_y = straight_flush(hand, sim_board)
+            straight_flush_check, straight_flush_y = straight_flush(
+                hand, sim_board)
             royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
 
             if royal_flush_check:
@@ -104,7 +115,8 @@ def simulate_hand_probability(hand, runs, initial_board=None):
             flush_check, flush_y = flush(s)
             full_house_check, full_house_y = full_house(n)
             four_check, four_y = four_of_a_kind(n)
-            straight_flush_check, straight_flush_y = straight_flush(hand, sim_board)
+            straight_flush_check, straight_flush_y = straight_flush(
+                hand, sim_board)
             royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
 
             if royal_flush_check:
@@ -144,7 +156,8 @@ def simulate_hand_probability(hand, runs, initial_board=None):
             flush_check, flush_y = flush(s)
             full_house_check, full_house_y = full_house(n)
             four_check, four_y = four_of_a_kind(n)
-            straight_flush_check, straight_flush_y = straight_flush(hand, sim_board)
+            straight_flush_check, straight_flush_y = straight_flush(
+                hand, sim_board)
             royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
 
             if royal_flush_check:
@@ -172,23 +185,7 @@ def simulate_hand_probability(hand, runs, initial_board=None):
         if to_test[step]:
             for outcome in stats[step]:
                 if outcome != 'total':
-                    stats[step][outcome] = stats[step][outcome] / float(stats[step]['total'])
+                    stats[step][outcome] = stats[step][outcome] / \
+                                           float(stats[step]['total'])
 
     return stats
-
-
-if __name__ == "__main__":
-    deck = init_deck()
-    board = []
-    deck, input_hand = deal_hand(deck)
-    print("Simulating from hand.")
-    stats = simulate_hand_probability(input_hand, 1000, board)
-    print(json.dumps(stats, indent=4, sort_keys=False))
-    deck, board = deal_flop(deck, [])
-    print("Simulating from flop.")
-    stats = simulate_hand_probability(input_hand, 1000, board)
-    print(json.dumps(stats, indent=4, sort_keys=False))
-    deck, board = deal_turn(deck, board)
-    print("Simulating from turn.")
-    stats = simulate_hand_probability(input_hand, 1000, board)
-    print(json.dumps(stats, indent=4, sort_keys=False))

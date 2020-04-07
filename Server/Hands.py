@@ -1,6 +1,6 @@
-from flask import *
+from flask import request, jsonify, render_template, Flask
 from flask_cors import CORS, cross_origin
-from Simulator import *
+import Simulator
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -15,7 +15,7 @@ def get_hand_chance():
     board = [tuple(card) for card in rq['board']]
     runs = rq['runs']
     print(runs)
-    output = simulate_hand_probability(hand, runs, board)
+    output = Simulator.simulate_hand_probability(hand, runs, board)
     print(output)
     return jsonify(output)
 

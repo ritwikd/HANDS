@@ -1,7 +1,5 @@
 import random
 
-from Objects.Utils import *
-
 # Aces high!
 faces = {2: '2 ', 3: '3 ', 4: '4 ', 5: '5 ',
          6: '6 ', 7: '7 ', 8: '8 ', 9: '9 ', 10: '10',
@@ -24,6 +22,7 @@ suit_string = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
 
 
 def init_deck():
+    """Initialize deck."""
     deck = []
     for f in faces:
         for s in suits:
@@ -33,17 +32,20 @@ def init_deck():
 
 
 def remove_card(deck, card):
+    """Remove given card from given deck and return deck."""
     card_index = deck.index(card)
     del deck[card_index]
     return deck
 
 
 def deal_hand(deck):
+    """Deal hand from given deck."""
     hand = [deck.pop(), deck.pop()]
     return deck, hand
 
 
 def deal_board(deck):
+    """Deal flop, turn, and river from given deck."""
     board = []
     deal_flop(deck, board)
     deal_turn(deck, board)
@@ -52,6 +54,7 @@ def deal_board(deck):
 
 
 def deal_flop(deck, board):
+    """Deal flop from given deck."""
     deck.pop()
     for i in range(3):
         board.append(deck.pop())
@@ -59,12 +62,14 @@ def deal_flop(deck, board):
 
 
 def deal_turn(deck, board):
+    """Deal turn from given deck."""
     deck.pop()
     board.append(deck.pop())
     return deck, board
 
 
 def deal_river(deck, board):
+    """Deal river from given deck."""
     deck.pop()
     board.append(deck.pop())
     return deck, board
