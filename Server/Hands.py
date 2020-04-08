@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from flask import request, jsonify, render_template, Flask
 from flask_cors import CORS, cross_origin
+import sys
+
+sys.path.append("/root/HANDS/")
+
 import Simulator
 
 app = Flask(__name__)
@@ -33,4 +37,4 @@ def hands():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=80)
