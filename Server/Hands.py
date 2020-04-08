@@ -10,13 +10,19 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/api/hand-chances/', methods=['POST'])
 def get_hand_chance():
     rq = request.json
-    print(rq)
     hand = [tuple(card) for card in rq['hand']]
     board = [tuple(card) for card in rq['board']]
     runs = rq['runs']
-    print(runs)
     output = Simulator.simulate_hand_probability(hand, runs, board)
-    print(output)
+    return jsonify(output)
+
+@cross_origin()
+@app.route('/api/showdown/', methods=['POST'])
+def get_showdown_info():
+    rq = request.json
+    hand = [tuple(card) for card in rq['hand']]
+    board = [tuple(card) for card in rq['board']]
+    output = Simulator.best_hand(hand, board)
     return jsonify(output)
 
 

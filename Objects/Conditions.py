@@ -63,7 +63,7 @@ def straight(n):
     if len(best_straight) == 0:
         return False, None
     else:
-        return True, best_straight[0]
+        return True, best_straight
 
 
 def flush(s):
@@ -107,7 +107,7 @@ def straight_flush(hand, board):
 
     potential_straights = []
 
-    for i in range(len(numbers_in_hand) - 5):
+    for i in range(len(numbers_in_hand) - 4):
         starting_num = numbers_in_hand[i]
         is_potential_straight = numbers_in_hand[i:i + 5] == list(range(starting_num, starting_num + 5))
         if is_potential_straight:
@@ -125,7 +125,7 @@ def straight_flush(hand, board):
 
         if straight_flushes:
             highest_straight_flush = straight_flushes[-1]
-            return True, (highest_straight_flush[0], highest_straight_flush[1][-1])
+            return True, highest_straight_flush
         else:
             return False, None
     else:
@@ -134,10 +134,10 @@ def straight_flush(hand, board):
 
 def royal_flush(hand, board):
     """Return if a royal flush exists and return card number (always 14) and suit of the royal flush if so."""
-    is_flush, info = straight_flush(hand, board)
-    if is_flush:
-        if info[1] == 14:
-            return True, info[0]
+    is_straight_flush, s_f = straight_flush(hand, board)
+    if is_straight_flush:
+        if s_f[1][-1] == 14:
+            return True, s_f
         else:
             return False, None
     else:

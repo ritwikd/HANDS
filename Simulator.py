@@ -18,6 +18,48 @@ from Objects.Conditions import four_of_a_kind, full_house, flush, straight
 from Objects.Conditions import royal_flush, straight_flush
 
 
+def best_hand(hand, board):
+    """Get best hand and win condition from given hand board."""
+    stats = ()
+
+    n = get_numbers(hand, board)
+    s = get_suits(hand, board)
+    high_check, high_result = high_card(n)
+    pair_check, pair_result = one_pair(n)
+    two_pair_check, two_pair_result = two_pair(n)
+    three_check, three_result = three_of_a_kind(n)
+    straight_check, straight_result = straight(n)
+    flush_check, flush_result = flush(s)
+    full_house_check, full_house_result = full_house(n)
+    four_check, four_result = four_of_a_kind(n)
+    straight_flush_check, straight_flush_result = straight_flush(
+        hand, board)
+    royal_flush_check, royal_flush_result = royal_flush(hand, board)
+
+    if royal_flush_check:
+        stats = ('royal_flush', royal_flush_result)
+    elif straight_flush_check:
+        stats = ('straight_flush', straight_flush_result)
+    elif four_check:
+        stats = ('four', four_result)
+    elif full_house_check:
+        stats = ('full_house', full_house_result)
+    elif flush_check:
+        stats = ('flush', flush_result)
+    elif straight_check:
+        stats = ('straight', straight_result)
+    elif three_check:
+        stats = ('three', three_result)
+    elif two_pair_check:
+        stats = ('two_pair', two_pair_result)
+    elif pair_check:
+        stats = ('pair', pair_result)
+    elif high_check:
+        stats = ('high', high_result)
+
+    return stats
+
+
 def simulate_hand_probability(hand, runs, initial_board=None):
     """Get probabilities of each condition being your best condition
         with the given hand and board, including simulating a flop,
@@ -66,17 +108,17 @@ def simulate_hand_probability(hand, runs, initial_board=None):
 
             stats['flop']['total'] += 1
 
-            high_check, high_y = high_card(n)
-            pair_check, pair_y = one_pair(n)
-            two_pair_check, two_pair_y = two_pair(n)
-            three_check, three_y = three_of_a_kind(n)
-            straight_check, straight_y = straight(n)
-            flush_check, flush_y = flush(s)
-            full_house_check, full_house_y = full_house(n)
-            four_check, four_y = four_of_a_kind(n)
-            straight_flush_check, straight_flush_y = straight_flush(
+            high_check, high_result = high_card(n)
+            pair_check, pair_result = one_pair(n)
+            two_pair_check, two_pair_result = two_pair(n)
+            three_check, three_result = three_of_a_kind(n)
+            straight_check, straight_result = straight(n)
+            flush_check, flush_result = flush(s)
+            full_house_check, full_house_result = full_house(n)
+            four_check, four_result = four_of_a_kind(n)
+            straight_flush_check, straight_flush_result = straight_flush(
                 hand, sim_board)
-            royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
+            royal_flush_check, royal_flush_result = royal_flush(hand, sim_board)
 
             if royal_flush_check:
                 stats['flop']['royal_flush'] += 1
@@ -107,17 +149,17 @@ def simulate_hand_probability(hand, runs, initial_board=None):
 
             stats['turn']['total'] += 1
 
-            high_check, high_y = high_card(n)
-            pair_check, pair_y = one_pair(n)
-            two_pair_check, two_pair_y = two_pair(n)
-            three_check, three_y = three_of_a_kind(n)
-            straight_check, straight_y = straight(n)
-            flush_check, flush_y = flush(s)
-            full_house_check, full_house_y = full_house(n)
-            four_check, four_y = four_of_a_kind(n)
-            straight_flush_check, straight_flush_y = straight_flush(
+            high_check, high_result = high_card(n)
+            pair_check, pair_result = one_pair(n)
+            two_pair_check, two_pair_result = two_pair(n)
+            three_check, three_result = three_of_a_kind(n)
+            straight_check, straight_result = straight(n)
+            flush_check, flush_result = flush(s)
+            full_house_check, full_house_result = full_house(n)
+            four_check, four_result = four_of_a_kind(n)
+            straight_flush_check, straight_flush_result = straight_flush(
                 hand, sim_board)
-            royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
+            royal_flush_check, royal_flush_result = royal_flush(hand, sim_board)
 
             if royal_flush_check:
                 stats['turn']['royal_flush'] += 1
@@ -148,17 +190,17 @@ def simulate_hand_probability(hand, runs, initial_board=None):
 
             stats['river']['total'] += 1
 
-            high_check, high_y = high_card(n)
-            pair_check, pair_y = one_pair(n)
-            two_pair_check, two_pair_y = two_pair(n)
-            three_check, three_y = three_of_a_kind(n)
-            straight_check, straight_y = straight(n)
-            flush_check, flush_y = flush(s)
-            full_house_check, full_house_y = full_house(n)
-            four_check, four_y = four_of_a_kind(n)
-            straight_flush_check, straight_flush_y = straight_flush(
+            high_check, high_result = high_card(n)
+            pair_check, pair_result = one_pair(n)
+            two_pair_check, two_pair_result = two_pair(n)
+            three_check, three_result = three_of_a_kind(n)
+            straight_check, straight_result = straight(n)
+            flush_check, flush_result = flush(s)
+            full_house_check, full_house_result = full_house(n)
+            four_check, four_result = four_of_a_kind(n)
+            straight_flush_check, straight_flush_result = straight_flush(
                 hand, sim_board)
-            royal_flush_check, royal_flush_y = royal_flush(hand, sim_board)
+            royal_flush_check, royal_flush_result = royal_flush(hand, sim_board)
 
             if royal_flush_check:
                 stats['river']['royal_flush'] += 1
