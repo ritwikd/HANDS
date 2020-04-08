@@ -912,6 +912,40 @@
                                         }
                                     }
                                 }
+                            } else if (probabilities[0] == 'full_house') {
+                                $('.showdown-title').html("<b>Showdown Results</b>: Full House");
+                                for (let card of currentCards) {
+                                    if (card[0] == probabilities[1][0]) {
+                                        let card_suit = suit_char_to_string[card[1]];
+                                        let card_num = card[0];
+                                        if (card_num > 10) {
+                                                card_num = face_num_to_string[card_num];
+                                        } else {
+                                            card_num = card_num.toString();
+                                        }
+                                        let show_card = document.createElement("img");
+                                        let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
+                                        $(show_card).attr('src', image_file);
+                                        show_card.className = 'showdown-card showdown-small-card';
+                                        $('.showdown-cards').append(show_card);
+                                    }
+                                }
+                                for (let card of currentCards) {
+                                    if (card[0] == probabilities[1][1]) {
+                                        let card_suit = suit_char_to_string[card[1]];
+                                        let card_num = card[0];
+                                        if (card_num > 10) {
+                                                card_num = face_num_to_string[card_num];
+                                        } else {
+                                            card_num = card_num.toString();
+                                        }
+                                        let show_card = document.createElement("img");
+                                        let image_file = '../static/assets/cards/' + card_num + '_of_' + card_suit + '.png';
+                                        $(show_card).attr('src', image_file);
+                                        show_card.className = 'showdown-card showdown-small-card';
+                                        $('.showdown-cards').append(show_card);
+                                    }
+                                }
                             }
                     });
                 });
