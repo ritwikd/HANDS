@@ -6,7 +6,7 @@
 
 html {
      #background: #35654d !important;
-    background: #444 !important;
+    background: #222 !important;
     overflow: hidden;
 
 }
@@ -16,11 +16,11 @@ body {
     width:1000px;
     margin-left: auto;
     margin-right: auto;
-    background: #444 !important;
+    background: #222 !important;
 }
 
 .content-card {
-    background-color: #222;
+    background-color: #343434;
     padding: 25px;
     width: 1000px;
     color: #EFEFEF;
@@ -138,6 +138,9 @@ body {
     height: 250px;
     margin-top: 12.5px;
     margin-bottom: 12.5px;
+    -webkit-box-shadow: -10px 10px 0px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: -10px 10px 0px 0px rgba(0,0,0,0.2);
+    box-shadow: -10px 10px 0px 0px rgba(0,0,0,0.2);
 }
 
 /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
@@ -194,6 +197,9 @@ body {
     margin-top: 12.5px;
     margin-bottom: 12.5px;
     height: 250px;
+    -webkit-box-shadow: -10px 10px 0px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: -10px 10px 0px 0px rgba(0,0,0,0.2);
+    box-shadow: -10px 10px 0px 0px rgba(0,0,0,0.2);
 }
 
 .compute-button {
