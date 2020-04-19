@@ -13,6 +13,22 @@ suits = ['♠', '♦', '♥', '♣']
 
 suit_string = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
 
+def card_to_string(card):
+    return "[" + faces[card[0]] + " of  " + card[1] + "]"
+
+def show_hand(hand):
+    print('Your hand:      ' +
+          card_to_string(hand[0]) + '   ' +
+          card_to_string(hand[1]))
+
+
+def show_board(board):
+    print("On the table:   " +
+          card_to_string(board[0]) + '   ' +
+          card_to_string(board[1]) + '   ' +
+          card_to_string(board[2]) + '   ' +
+          card_to_string(board[3]) + '   ' +
+          card_to_string(board[4]))
 
 def init_deck():
     deck = []
@@ -83,7 +99,3 @@ def get_suits(hand, board):
         else:
             suits[card[1]] = 1
     return suits
-
-
-def card_to_string(card):
-    return "[" + faces[card[0]] + " of  " + card[1] + "]"
